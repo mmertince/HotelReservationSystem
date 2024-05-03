@@ -1,5 +1,7 @@
 
 public class HotelReservationSystem {
+	
+	static int counter;
 
 	public static void main(String[] args) {
 		System.out.println("deneme");
@@ -27,7 +29,7 @@ public class HotelReservationSystem {
 		}
 	}
 	
-	public static Room[] createRooms() {
+	public static Room[] createRooms(){
 		Room[] tempRooms=new Room[20];
 		for(int i=0;i<4;i++) {
 			for(int j=0;j<5;j++) {
@@ -46,8 +48,9 @@ public class HotelReservationSystem {
 		return tempRooms;
 	}
 	public static void setPiles(StackADT<Room> pile,Room[] rooms) {
-		//	for(int i=counter*5-1;i>counter*5-6;i--) {
-			//	pile.push(rooms[i]);
-			//}
+		counter++;
+		for(int i=counter*5-1;i>counter*5-6;i--) {
+			pile.push(rooms[i]);
+		}
 	}
 }
