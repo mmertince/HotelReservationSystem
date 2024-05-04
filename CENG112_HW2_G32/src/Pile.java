@@ -6,7 +6,7 @@ public class Pile<T> implements StackADT<T> {
 	private int topIndex;
 	private boolean initialized = false;
 	public static final int DEFAULT_CAPACITY = 5;
-	public static final int MAX_CAPACITY = 50;
+	public static final int MAX_CAPACITY = 100;
 
 	public Pile() {
 		this(DEFAULT_CAPACITY);
