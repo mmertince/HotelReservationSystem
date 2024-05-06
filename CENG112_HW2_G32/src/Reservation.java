@@ -13,4 +13,10 @@ public class Reservation {
 		this.customerName = customerName;
 		this.roomType = roomType;
 	}
+	@Override
+	public String toString() {
+		return "Reservation Id :"+reservationID+
+				" Customer Name :"+ customerName+
+				" Room Type :"+ roomType;
+	}
 }
