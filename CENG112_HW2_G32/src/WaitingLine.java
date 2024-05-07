@@ -52,7 +52,7 @@ public class WaitingLine<T> implements QueueADT<T> {
 		}
 	}
 	private void ensureCapacity() {
-		if(frontIndex==((backIndex+2)%queue.length)) {
+		if(frontIndex==((backIndex+2)%queue.length)) { 
 			T[] oldQueue=queue;
 			int oldSize=oldQueue.length;
 			int newSize=2*oldSize;

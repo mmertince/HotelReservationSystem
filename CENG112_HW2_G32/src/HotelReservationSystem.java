@@ -1,19 +1,27 @@
 
 public class HotelReservationSystem {
-	
-	static int counter;
+	//convert to a class not main
+	private int counter;
+	private Room[] tempRooms;
+	private StackADT<Room> pile1;
+	private StackADT<Room> pile2;
+	private StackADT<Room> pile3;
+	private StackADT<Room> pile4;
+	private QueueADT<Reservation> singleWaitList;
+	private QueueADT<Reservation> doubleWaitList;
+	private QueueADT<Reservation> suiteWaitList;
+	private QueueADT<Reservation> deluxeWaitList;
+	private ListADT<Room> bookedRooms;
+	private ListADT<Room> unavailableRooms;
+	private ListADT<Room> availableRooms;
 
-	public static void main(String[] args) {
-		System.out.println("deneme");
-		Room[] tempRooms=new Room[20];
-		StackADT<Room> pile1=new Pile<Room>(5);
-		setPiles(pile1,createRooms());
-		StackADT<Room> pile2=new Pile<Room>(5);
-		setPiles(pile2,createRooms());
-		StackADT<Room> pile3=new Pile<Room>(5);
-		setPiles(pile3,createRooms());
-		StackADT<Room> pile4=new Pile<Room>(5);
-		setPiles(pile4,createRooms());
+	public HotelReservationSystem() {
+		tempRooms=new Room[20];
+		pile1=new Pile<Room>(5);
+		pile2=new Pile<Room>(5);
+		pile3=new Pile<Room>(5);
+		pile4=new Pile<Room>(5);
+		setAllPiles();
 		
 		/*while(!pile1.isEmpty()) {
 			System.out.println(pile1.pop());
@@ -27,14 +35,11 @@ public class HotelReservationSystem {
 		while(!pile4.isEmpty()) {
 			System.out.println(pile4.pop());
 		}*/
-		QueueADT<Reservation> singleReservations=new WaitingLine<Reservation>();
-		QueueADT<Reservation> doubleReservations=new WaitingLine<Reservation>();
-		QueueADT<Reservation> suiteReservations=new WaitingLine<Reservation>();
-		QueueADT<Reservation> deluxeReservations=new WaitingLine<Reservation>();		
-		FileIO.readFile(singleReservations,"Single");
-		FileIO.readFile(doubleReservations, "Double");
-		FileIO.readFile(suiteReservations,"Suite");
-		FileIO.readFile(deluxeReservations, "Deluxe");
+		singleWaitList=new WaitingLine<Reservation>();
+		doubleWaitList=new WaitingLine<Reservation>();
+		suiteWaitList=new WaitingLine<Reservation>();
+		deluxeWaitList=new WaitingLine<Reservation>();		
+		FileProcess();
 		/*while(!singleReservations.isEmpty()) {
 		System.out.println(singleReservations.dequeue());
 		}
@@ -47,6 +52,15 @@ public class HotelReservationSystem {
 		while(!suiteReservations.isEmpty()) {
 			System.out.println(suiteReservations.dequeue());
 			}*/
+		bookedRooms=new List<Room>();
+		processRezervations();
+		while(!bookedRooms.isEmpty()) {
+			System.out.println(bookedRooms.remove());
+		}
+		makeOddNumbersAvailable();
+		processRezervation(pile1);
+		unavailableRooms=new List<Room>();
+		availableRooms=new List<Room>();
 	}
 	
 	public static Room[] createRooms(){
@@ -67,14 +81,42 @@ public class HotelReservationSystem {
 	  }
 		return tempRooms;
 	}
-	public static void setPiles(StackADT<Room> pile,Room[] rooms) {
+	private void makeOddNumbersAvailable() {
+		for(int i=1;i<=bookedRooms.getLength();i+=2) {
+			bookedRooms.getEntry(i).changeAvailability();
+		}
+	}
+	private void setAllPiles() {
+		setPiles(pile1,createRooms());
+		setPiles(pile2,createRooms());
+		setPiles(pile3,createRooms());
+		setPiles(pile4,createRooms());
+	}
+	private void setPiles(StackADT<Room> pile,Room[] rooms) {
 		counter++;
 		for(int i=counter*5-1;i>counter*5-6;i--) {
 			pile.push(rooms[i]);
 		}
 	}
-	public static void processRezervation(QueueADT<Reservation> reservations,StackADT<Room> rooms) {
-		
+	private void processRezervations() {
+		processRezervation(pile1);
+		processRezervation(pile2);
+		processRezervation(pile3);
+		processRezervation(pile4);
+	}
+	private void processRezervation(StackADT<Room> pile) {
+		while(!pile.isEmpty()) {
+			if(pile.peek().getAvailability()==true) {
+				pile.peek().changeAvailability();
+				bookedRooms.add(pile.pop());
+			}
+		}
+	}
+	private void FileProcess() {
+		FileIO.readFile(singleWaitList,"Single");
+		FileIO.readFile(doubleWaitList, "Double");
+		FileIO.readFile(suiteWaitList,"Suite");
+		FileIO.readFile(deluxeWaitList, "Deluxe");
 	}
 }
 

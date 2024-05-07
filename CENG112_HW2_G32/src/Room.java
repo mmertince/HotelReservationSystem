@@ -9,9 +9,20 @@ public class Room {
 		this.roomType = roomType;
 		this.availability = availabilitiy;
 	}
-
+	public void changeAvailability() {
+		availability=!availability;
+	}
+	public String getRoomNumber() {
+		return roomNumber;
+	}
+	public String getRoomType() {
+		return roomType;
+	}
+	public boolean getAvailability() {
+		return availability;
+	}
 	@Override
 	public String toString() {
-		return "Room Number :" + roomNumber + " Room Type :" + roomType;
+		return "Room Number :" + roomNumber + " Room Type :" + roomType+" Available :"+availability;
 	}
 }

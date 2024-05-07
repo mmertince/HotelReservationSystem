@@ -12,7 +12,7 @@ public class FileIO {
             Scanner scanner = new Scanner(file);
             scanner.nextLine();
             while (scanner.hasNextLine()) {
-                String[] resInfo = scanner.nextLine().split(",");
+                String[] resInfo = scanner.nextLine().split(","); 
                 if(resInfo[2].equals(roomType)){
                 Reservation reservation=new Reservation(resInfo[0].strip(), resInfo[1].strip(), resInfo[2].strip());
                 reservations.enqueue(reservation);
