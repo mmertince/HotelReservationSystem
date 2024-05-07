@@ -22,45 +22,26 @@ public class HotelReservationSystem {
 		pile3=new Pile<Room>(5);
 		pile4=new Pile<Room>(5);
 		setAllPiles();
-		
-		/*while(!pile1.isEmpty()) {
-			System.out.println(pile1.pop());
-		}
-		while(!pile2.isEmpty()) {
-			System.out.println(pile2.pop());
-		}
-		while(!pile3.isEmpty()) {
-			System.out.println(pile3.pop());
-		}
-		while(!pile4.isEmpty()) {
-			System.out.println(pile4.pop());
-		}*/
+		printPiles();
 		singleWaitList=new WaitingLine<Reservation>();
 		doubleWaitList=new WaitingLine<Reservation>();
 		suiteWaitList=new WaitingLine<Reservation>();
 		deluxeWaitList=new WaitingLine<Reservation>();		
 		FileProcess();
-		/*while(!singleReservations.isEmpty()) {
-		System.out.println(singleReservations.dequeue());
-		}
-		while(!doubleReservations.isEmpty()) {
-			System.out.println(doubleReservations.dequeue());
-			}
-		while(!deluxeReservations.isEmpty()) {
-			System.out.println(deluxeReservations.dequeue());
-			}
-		while(!suiteReservations.isEmpty()) {
-			System.out.println(suiteReservations.dequeue());
-			}*/
 		bookedRooms=new List<Room>();
 		processRezervations();
-		while(!bookedRooms.isEmpty()) {
-			System.out.println(bookedRooms.remove());
-		}
+		printReservations();
 		makeOddNumbersAvailable();
-		processRezervation(pile1);
+		printPiles();
+		processRezervations();
+		printReservations();
 		unavailableRooms=new List<Room>();
 		availableRooms=new List<Room>();
+		addToAvailabilityList(pile1);
+		addToAvailabilityList(pile2);
+		addToAvailabilityList(pile3);
+		addToAvailabilityList(pile4);
+		printAvailabilityLists();
 	}
 	
 	public static Room[] createRooms(){
@@ -82,8 +63,9 @@ public class HotelReservationSystem {
 		return tempRooms;
 	}
 	private void makeOddNumbersAvailable() {
-		for(int i=1;i<=bookedRooms.getLength();i+=2) {
+		for(int i=bookedRooms.getLength();i>=1;i=i-2) {
 			bookedRooms.getEntry(i).changeAvailability();
+			pushRoomToPile(bookedRooms.remove(i));
 		}
 	}
 	private void setAllPiles() {
@@ -99,16 +81,19 @@ public class HotelReservationSystem {
 		}
 	}
 	private void processRezervations() {
-		processRezervation(pile1);
-		processRezervation(pile2);
-		processRezervation(pile3);
-		processRezervation(pile4);
+		processRezervation(pile1,singleWaitList);
+		processRezervation(pile2,doubleWaitList);
+		processRezervation(pile3,suiteWaitList);
+		processRezervation(pile4,deluxeWaitList);
 	}
-	private void processRezervation(StackADT<Room> pile) {
-		while(!pile.isEmpty()) {
+	private void processRezervation(StackADT<Room> pile,QueueADT<Reservation> waitList) {
+		while(!pile.isEmpty()&&!waitList.isEmpty()) {
 			if(pile.peek().getAvailability()==true) {
 				pile.peek().changeAvailability();
-				bookedRooms.add(pile.pop());
+				waitList.dequeue();
+				Room temp=pile.pop();
+				if(!bookedRooms.contains(temp))
+				bookedRooms.add(temp);
 			}
 		}
 	}
@@ -117,6 +102,71 @@ public class HotelReservationSystem {
 		FileIO.readFile(doubleWaitList, "Double");
 		FileIO.readFile(suiteWaitList,"Suite");
 		FileIO.readFile(deluxeWaitList, "Deluxe");
+	}
+	private void pushRoomToPile(Room room) {
+		switch(room.getRoomType()) {
+		case "Single":pile1.push(room);
+		break;
+		case "Double":pile2.push(room);
+		break;
+		case "Suite":pile3.push(room);
+		break;
+		case "Deluxe":pile4.push(room);
+		break;
+		}
+	}
+	private void addToAvailabilityList(StackADT<Room> pile) {
+		while(!pile.isEmpty()) {
+			availableRooms.add(pile.pop());
+			}
+		while(!bookedRooms.isEmpty()) {
+				unavailableRooms.add(bookedRooms.remove());
+		}
+	}
+	private void printPiles() {
+		System.out.println("***************************************************************************");
+		System.out.println("");
+		System.out.println("Single pile of room");
+		pile1.printInfo();
+		System.out.println("Double pile of room");
+		pile2.printInfo();
+		System.out.println("Suite pile of room");
+		pile3.printInfo();
+		System.out.println("Deluxe pile of room");
+		pile4.printInfo();
+	}
+	private void printReservations() {
+		System.out.println("***************************************************************************");
+		System.out.println("");
+		System.out.println("Single waiting line of reservations");
+		singleWaitList.printInfo();
+		System.out.println("Double waiting line of reservations");
+		doubleWaitList.printInfo();
+		System.out.println("Suite waiting line of reservations");
+		suiteWaitList.printInfo();
+		System.out.println("Deluxe waiting line of reservations");
+		deluxeWaitList.printInfo();
+	}
+	private void printAvailabilityLists() {
+		System.out.println("***************************************************************************");
+		System.out.println("");
+		System.out.println("Unavailable Rooms");
+		sortList();
+		unavailableRooms.printInfo();
+		System.out.println("Available Rooms");
+		availableRooms.printInfo();
+	}
+	private void sortList() {
+		Room temp;
+		for(int i=1;i<=unavailableRooms.getLength();i++) {
+			for(int j=i;j<=unavailableRooms.getLength();j++) {
+				if(Integer.parseInt(unavailableRooms.getEntry(i).getRoomNumber())>Integer.parseInt(unavailableRooms.getEntry(j).getRoomNumber())) {
+					temp=unavailableRooms.getEntry(j);
+					unavailableRooms.replace(j,unavailableRooms.getEntry(i));
+					unavailableRooms.replace(i, temp);
+				}
+			}
+		}
 	}
 }
 

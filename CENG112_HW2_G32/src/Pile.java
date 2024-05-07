@@ -77,5 +77,10 @@ public class Pile<T> implements StackADT<T> {
 			pile = Arrays.copyOf(pile, newLength);
 		}
 	}
+	public void printInfo() {
+		for(int i=topIndex;i>=0;i--) {
+			System.out.println(pile[i]);
+		}
+	}
 
 }

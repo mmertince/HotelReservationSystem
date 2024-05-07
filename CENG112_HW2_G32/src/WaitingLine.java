@@ -51,6 +51,11 @@ public class WaitingLine<T> implements QueueADT<T> {
 			this.dequeue();
 		}
 	}
+	public void printInfo() {
+		for(int i=frontIndex;i<=backIndex;i++) {
+			System.out.println(queue[i]);
+		}
+	}
 	private void ensureCapacity() {
 		if(frontIndex==((backIndex+2)%queue.length)) { 
 			T[] oldQueue=queue;

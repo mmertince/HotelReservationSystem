@@ -6,4 +6,5 @@ public interface QueueADT<T> {
 	public T getFront();
 	public boolean isEmpty();
 	public void clear();
+	public void printInfo();
 }

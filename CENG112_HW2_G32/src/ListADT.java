@@ -11,4 +11,5 @@ public interface ListADT<T> {
 	public boolean contains(T anEntry);
 	public int getLength();
 	public boolean isEmpty();
+	public void printInfo();
 }

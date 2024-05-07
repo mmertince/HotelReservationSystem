@@ -9,4 +9,6 @@ public interface StackADT<T> {
 	public boolean isEmpty();
 
 	public void clear();
+	
+	public void printInfo();
 }

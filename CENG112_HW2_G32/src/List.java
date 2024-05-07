@@ -110,6 +110,11 @@ public class List<T> implements ListADT<T> {
 	public boolean isEmpty() {
 		return numberOfEntries==0;
 	}
+	public void printInfo() {
+		for(int i=1;i<=numberOfEntries;i++) {
+			System.out.println(list[i]); 
+		}
+	}
 	private void removeGap(int givenPosition) {
 		assert(givenPosition>=1)&&(givenPosition<numberOfEntries);
 		int removedIndex=givenPosition;
